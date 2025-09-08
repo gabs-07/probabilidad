@@ -1,0 +1,206 @@
+/* =========================================================
+   editor_libro.css — Estilos del Editor de Libro
+   (versión compacta con mejoras de menús y utilidades)
+   ========================================================= */
+
+/* ---------- Variables ---------- */
+:root{
+  --azul:#004080;
+  --borde:#d9e1f2;
+  --gris:#f6fafd;
+  --texto:#333;
+  --bg:#fff;
+  --btn-bg:#fff;
+  --btn-borde:#ccc;
+  --btn-bg-hover:#f3f6fb;
+}
+
+/* ---------- Reset básico ---------- */
+*{ box-sizing:border-box }
+html,body{ height:100% }
+body{
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  color:var(--texto);
+  background:#fafafa;
+}
+
+/* ---------- Encabezado ---------- */
+header{
+  padding:10px 16px;
+  border-bottom:1px solid #eee;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  background:var(--bg);
+}
+header h1{ margin:0; font-size:18px; font-weight:700 }
+header .sep{ flex:1 }
+button{
+  padding:6px 10px;
+  border:1px solid var(--btn-borde);
+  background:var(--btn-bg);
+  cursor:pointer;
+  border-radius:6px;
+  transition:background .12s ease;
+}
+button:hover{ background:var(--btn-bg-hover) }
+
+/* ---------- Layout principal ---------- */
+.layout{
+  display:grid;
+  grid-template-columns: 280px 1fr;
+  min-height: calc(100vh - 52px);
+  background:var(--bg);
+}
+
+/* ---------- Índice (TOC) ---------- */
+.toc{
+  border-right:1px solid #eee;
+  padding:10px;
+  overflow:auto;
+  background:#fff;
+}
+.toc h2{
+  font-size:16px;
+  margin:4px 0 8px 0;
+  color:var(--azul);
+}
+.toc .toolbar{
+  display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px
+}
+.toc ul{ list-style:none; padding-left:0; margin:0 }
+.toc li{
+  padding:4px 6px;
+  margin:2px 0;
+  border-radius:6px;
+  cursor:pointer;
+  line-height:1.3;
+}
+.toc li:hover{ background:#f3f6fb }
+.toc .lvl-0{ font-weight:bold }
+.toc .lvl-1{ margin-left:12px }
+.toc .lvl-2{ margin-left:24px; font-size:.95em }
+.toc .lvl-3{ margin-left:36px; font-size:.92em }
+.toc .selected{ outline:2px solid #99c; background:#eef3ff }
+.toc ul ul{ margin-top:2px } /* compacta anidados */
+
+/* ---------- Panel derecho ---------- */
+.main{
+  padding:14px;
+  overflow:auto;
+  background:#fff;
+  display:grid;
+  grid-template-rows: auto auto 1fr;
+  gap:12px;
+}
+.info{ font-size:13px; color:#444 }
+.badge{
+  background:#eef3ff; border:1px solid #ccd7ff; color:#224488;
+  padding:2px 6px; border-radius:999px; font-size:12px; margin-left:6px
+}
+.output{
+  border:1px solid #ccc; background:#fff; border-radius:8px;
+  padding:12px; min-height:60px;
+}
+
+/* ---------- Elementos de contenido ---------- */
+.definicion-estilo{
+  background-color:#f9f9f9; border-left:5px solid var(--azul);
+  padding:1rem; margin:1rem 0; border-radius:6px;
+}
+.separador-seccion{ border:none; border-top:2px solid #eee; margin:1rem 0 }
+.simulador-box{
+  background:var(--gris); border:1px solid var(--borde);
+  border-radius:7px; margin:12px 0; padding:12px;
+}
+.figure-caption{ font-size:.95em; color:#444; margin-top:6px }
+
+/* ---------- Modal editor ---------- */
+.modal-bg{
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.5); z-index:20;
+  align-items:center; justify-content:center
+}
+.modal{
+  background:#fff; padding:16px; border-radius:10px;
+  min-width: 380px; max-width: min(960px, 95vw);
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+  display:flex; flex-direction:column; gap:10px;
+}
+.modal .row{ display:grid; grid-template-columns: 1fr; gap:8px }
+.modal input[type="text"]{
+  width:100%; font-size:1.05em; padding:6px; border:1px solid #ccc; border-radius:6px
+}
+.modal textarea{
+  width:100%; min-height:140px; font-size:1em; padding:8px;
+  border:1px solid #ccc; border-radius:6px; resize:vertical
+}
+.modal .buttons{ text-align:right; display:flex; gap:8px; justify-content:flex-end }
+
+/* ---------- Barra de herramientas del contenido ---------- */
+.toolbar-line{ display:flex; gap:6px; align-items:center; position:relative; flex-wrap:wrap }
+.math-toolbar{ display:flex; gap:6px; flex-wrap:wrap }
+
+/* ---------- Menús matemáticos (compactados con scroll) ---------- */
+.math-menu{
+  display:none; position:absolute; background:#fff; border:1px solid #ccc;
+  min-width:240px; max-width:360px; max-height:240px; overflow-y:auto;
+  z-index:30; box-shadow:0 2px 8px rgba(0,0,0,.07); border-radius:8px; padding:6px;
+  font-size:.95em; /* un poco más pequeño */
+}
+.math-menu .menu-cat{
+  font-weight:bold; margin:6px 0 2px 6px;
+  color:#224488; font-size:.92em
+}
+.math-menu .math-item{
+  display:inline-block; margin:3px 3px; cursor:pointer;
+  padding:2px 6px; border-radius:4px; font-size:1em; user-select:none
+}
+.math-menu .math-item:hover{ background:#f3f6fb }
+
+/* ---------- Código (HTML generado) ---------- */
+.codigo{ width:100%; height:120px }
+
+/* ---------- Herramientas de simuladores (ocultables) ---------- */
+.sim-tools{ display:flex; gap:6px; flex-wrap:wrap }
+.sim-tools.hidden{ display:none !important }
+
+/* ---------- Utilidad de marca de agua (opcional) ---------- */
+.with-watermark{
+  --wm-image: url('Neteaching_logo.png');
+  --wm-size: min(60vmin, 460px);
+  --wm-opacity: .10;   /* sube para probar, luego ajusta */
+  --wm-rotate: 0deg;
+  position: relative;
+}
+
+.with-watermark::before{
+  content: "";
+  position: fixed;              /* <- clave para que siga el scroll */
+  top: 50%; left: 50%;
+  width: var(--wm-size);
+  height: var(--wm-size);
+  background-image: var(--wm-image);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: var(--wm-opacity);
+  filter: grayscale(1) contrast(1.1);
+  transform: translate(-50%, -50%) rotate(var(--wm-rotate));
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Asegura el contenido por encima de la marca de agua */
+.with-watermark > * { position: relative; z-index: 1; }
+
+/* En impresión, un poco más visible */
+@media print{
+  .with-watermark{ --wm-opacity: .12; }
+}
+#inpContenido {
+  font-size: 1.3em;   /* Aumenta el tamaño de la letra */
+  line-height: 1.5;   /* Espaciado entre líneas */
+}
+
