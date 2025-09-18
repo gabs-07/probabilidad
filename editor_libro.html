@@ -26,6 +26,9 @@
 </head>
 
 <body>
+  <!-- Botón flotante para mostrar/ocultar ChatBot -->
+  <button id="toggleChatbotBtn" style="position:fixed;bottom:24px;right:24px;z-index:100;background:#2a4d7a;color:#fff;border-radius:50%;width:48px;height:48px;border:none;box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:22px;cursor:pointer;">💬</button>
+
   <header>
     <h1>Generador de Libro</h1>
     <div class="sep"></div>
@@ -75,7 +78,7 @@
           </div>
           <div class="control">
             <label for="margins">Márgenes (px)</label>
-            <input id="margins" type="range" min="16" max="48" value="28">
+            <input id="margins
           </div>
           <div class="control">
             <label for="columns">Columnas</label>
@@ -160,7 +163,7 @@
   </div>
 
   <!-- ChatBot Matemáticas/Probabilidad/Estadística -->
-  <div id="chatbotBox" style="position:fixed;bottom:24px;right:24px;z-index:99;width:320px;max-width:95vw;">
+  <div id="chatbotBox" style="position:fixed;bottom:24px;right:24px;z-index:99;width:320px;max-width:95vw;display:none;">
     <div style="background:#fffaf3;border:1px solid #e0cfa2;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.12);padding:10px;">
       <div style="font-weight:bold;color:#2a4d7a;margin-bottom:6px;">ChatBot Matemáticas</div>
       <div id="chatbotMessages" style="height:180px;overflow-y:auto;font-size:14px;background:#f5e9d7;padding:8px;border-radius:8px;margin-bottom:8px;"></div>
@@ -182,6 +185,15 @@
 
   function chatbotReply(msg) {
     msg = msg.trim().toLowerCase();
+
+    // Saludos y frases comunes
+    if (msg.match(/^(hola|buenos días|buenas tardes|buenas noches|hey|holi|saludos)$/)) return "¡Hola! ¿En qué puedo ayudarte hoy?";
+    if (msg.includes('¿cómo estás') || msg.includes('como estas')) return "¡Estoy bien, gracias! ¿En qué tema de matemáticas, probabilidad o estadística te ayudo?";
+    if (msg.includes('gracias')) return "¡De nada! Si tienes otra pregunta, aquí estoy.";
+    if (msg.includes('adiós') || msg.includes('hasta luego') || msg.includes('nos vemos')) return "¡Hasta luego! Vuelve cuando quieras preguntar algo.";
+    if (msg.includes('quién eres') || msg.includes('quien eres')) return "Soy tu asistente virtual de matemáticas, probabilidad y estadística.";
+    if (msg.includes('qué puedes hacer') || msg.includes('que puedes hacer')) return "Puedo responder preguntas básicas de matemáticas, probabilidad y estadística. Prueba con fórmulas, definiciones o cálculos simples.";
+
     // Matemáticas básicas
     if (msg.includes('derivada de x^2')) return "La derivada de x² es 2x.";
     if (msg.includes('derivada de sen(x)')) return "La derivada de sen(x) es cos(x).";
@@ -219,9 +231,86 @@
       if (parseInt(m[2]) === 0) return "No se puede dividir por cero.";
       return `El resultado es ${(parseInt(m[1]) / parseInt(m[2])).toFixed(3)}.`;
     }
+
+    // Detección de creación de partes del libro
+    if (msg.includes('crear portada')) {
+      autoAddBookPart('portada');
+      return "He creado una portada para tu libro.";
+    }
+    if (msg.includes('crear prefacio')) {
+      autoAddBookPart('prefacio');
+      return "He creado un prefacio para tu libro.";
+    }
+    if (msg.includes('crear capítulo') || msg.includes('crear capitulo')) {
+      autoAddBookPart('capitulo');
+      return "He creado un capítulo para tu libro.";
+    }
+    if (msg.includes('crear sección') || msg.includes('crear seccion')) {
+      autoAddBookPart('seccion');
+      return "He creado una sección para tu libro.";
+    }
+    if (msg.includes('crear subsección') || msg.includes('crear subseccion')) {
+      autoAddBookPart('subseccion');
+      return "He creado una subsección para tu libro.";
+    }
+
     // Respuesta por defecto
     lastBotAnswer = "No sé la respuesta exacta, pero puedo ayudarte con preguntas básicas de matemáticas, probabilidad y estadística. Prueba con fórmulas, definiciones o cálculos simples.";
     return lastBotAnswer;
+  }
+
+  // Agrega automáticamente una parte al libro según el tipo
+  function autoAddBookPart(tipo) {
+    if (!window.pages || !Array.isArray(window.pages)) return;
+    let plantilla;
+    switch(tipo) {
+      case 'portada':
+        plantilla = {
+          id: "p" + (window.pages.length + 1),
+          tipo: "portada",
+          titulo: "Portada",
+          contenido: `<div class="portada"><h1 style="text-align:center;">Portada</h1><p style="text-align:center;">Autor: ChatBot</p><p style="text-align:center;">Edición: 1ª</p><p style="text-align:center;">Fecha: ${new Date().toISOString().slice(0,10)}</p><p style="text-align:center;">Editorial: ChatBot Editorial</p></div>`
+        };
+        break;
+      case 'prefacio':
+        plantilla = {
+          id: "p" + (window.pages.length + 1),
+          tipo: "generico",
+          titulo: "Prefacio",
+          contenido: `<p>Bienvenido al libro. Este prefacio fue generado automáticamente por el ChatBot.</p>`
+        };
+        break;
+      case 'capitulo':
+        plantilla = {
+          id: "p" + (window.pages.length + 1),
+          tipo: "generico",
+          titulo: "Capítulo 1",
+          contenido: `<h3>Introducción</h3><p>Este es el primer capítulo, generado por el ChatBot.</p>`
+        };
+        break;
+      case 'seccion':
+        plantilla = {
+          id: "p" + (window.pages.length + 1),
+          tipo: "generico",
+          titulo: "Sección",
+          contenido: `<h4>Tema</h4><p>Esta sección fue creada automáticamente por el ChatBot.</p>`
+        };
+        break;
+      case 'subseccion':
+        plantilla = {
+          id: "p" + (window.pages.length + 1),
+          tipo: "generico",
+          titulo: "Subsección",
+          contenido: `<h5>Subtema</h5><p>Subsección generada por el ChatBot.</p>`
+        };
+        break;
+      default:
+        return;
+    }
+    window.pages.push(plantilla);
+    if (window.renderPagesList) window.renderPagesList();
+    if (window.renderPreview) window.renderPreview();
+    if (window.dumpHTML) window.dumpHTML();
   }
 
   function addChatbotMsg(text, from='user') {
@@ -297,6 +386,16 @@
       if (window.dumpHTML) window.dumpHTML();
     });
   }
+
+  // Mostrar/ocultar ChatBot
+  const chatbotBox = document.getElementById('chatbotBox');
+  const toggleChatbotBtn = document.getElementById('toggleChatbotBtn');
+  let chatbotVisible = false;
+  toggleChatbotBtn.onclick = function() {
+    chatbotVisible = !chatbotVisible;
+    chatbotBox.style.display = chatbotVisible ? '' : 'none';
+    toggleChatbotBtn.title = chatbotVisible ? 'Ocultar ChatBot' : 'Mostrar ChatBot';
+  };
   </script>
 </body>
 </html>
